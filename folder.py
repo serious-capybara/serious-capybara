@@ -19,5 +19,5 @@ def folder_auto(path, index_name, start, end):
             print(f"❌ An error occurred creating {full_name}: {e}")
 
 
-folder_auto("/home/restyaldave/Desktop/School/SWU/College/S2Y1/PED 031", "PED 031_DAY ", 1, 15)
+folder_auto("/home/restyaldave/Desktop/School/SWU/College/S2Y1/NST 022/SSP", "SSP 022_SAS ", 1, 21)
 print("\nFolder creation process finished.")
