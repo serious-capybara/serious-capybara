@@ -7,5 +7,14 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,san
 @keyframes beacon{0%,100%{opacity:0}50%{opacity:.5}}
 .tw{animation:tw 4.5s ease-in-out infinite}
 @keyframes tw{0%,100%{opacity:.12}50%{opacity:.6}}
-@media (prefers-reduced-motion:reduce){.bd,.beacon,.tw{animation:none}}
-</style><defs></defs><rect width="1200" height="150" rx="18" fill="#08161a"/><rect x=".75" y=".75" width="1198.5" height="148.5" rx="17.25" fill="none" stroke="#1d3d42" stroke-width="1.5"/><text x="150" y="88" text-anchor="middle" font-size="54" class="serif" fill="#f2c879">1</text><text x="150" y="116" text-anchor="middle" font-size="15" fill="#7fa398">Stars earned</text><rect x="300" y="34" width="1.5" height="82" fill="#1d3d42"/><text x="450" y="88" text-anchor="middle" font-size="54" class="serif" fill="#86efac">726</text><text x="450" y="116" text-anchor="middle" font-size="15" fill="#7fa398">Contributions this year</text><rect x="600" y="34" width="1.5" height="82" fill="#1d3d42"/><text x="750" y="88" text-anchor="middle" font-size="54" class="serif" fill="#86efac">16</text><text x="750" y="116" text-anchor="middle" font-size="15" fill="#7fa398">Public repositories</text><rect x="900" y="34" width="1.5" height="82" fill="#1d3d42"/><text x="1050" y="88" text-anchor="middle" font-size="54" class="serif" fill="#86efac">8</text><text x="1050" y="116" text-anchor="middle" font-size="15" fill="#7fa398">Followers</text></svg>
+.wv{animation:wave 26s linear infinite}
+.w2{animation-duration:18s;animation-direction:reverse}
+.w3{animation-duration:13s}
+@keyframes wave{to{transform:translateX(-1200px)}}
+.dr{animation:drift 14s ease-in-out infinite alternate}
+.d2{animation-duration:18s;animation-direction:alternate-reverse}
+@keyframes drift{to{transform:translate(-90px,30px)}}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 4.5s ease-out infinite}
+@keyframes pulse{0%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(1.4)}}
+@media (prefers-reduced-motion:reduce){.bd,.beacon,.tw,.wv,.dr,.pulse{animation:none}}
+</style><defs></defs><rect width="1200" height="150" rx="18" fill="#08161a"/><rect x=".75" y=".75" width="1198.5" height="148.5" rx="17.25" fill="none" stroke="#1d3d42" stroke-width="1.5"/><text x="150" y="88" text-anchor="middle" font-size="54" class="serif" fill="#f2c879">1</text><text x="150" y="116" text-anchor="middle" font-size="15" fill="#7fa398">Stars earned</text><rect x="300" y="34" width="1.5" height="82" fill="#1d3d42"/><text x="450" y="88" text-anchor="middle" font-size="54" class="serif" fill="#86efac">727</text><text x="450" y="116" text-anchor="middle" font-size="15" fill="#7fa398">Contributions this year</text><rect x="600" y="34" width="1.5" height="82" fill="#1d3d42"/><text x="750" y="88" text-anchor="middle" font-size="54" class="serif" fill="#86efac">16</text><text x="750" y="116" text-anchor="middle" font-size="15" fill="#7fa398">Public repositories</text><rect x="900" y="34" width="1.5" height="82" fill="#1d3d42"/><text x="1050" y="88" text-anchor="middle" font-size="54" class="serif" fill="#86efac">8</text><text x="1050" y="116" text-anchor="middle" font-size="15" fill="#7fa398">Followers</text></svg>
