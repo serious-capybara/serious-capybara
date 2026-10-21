@@ -95,17 +95,17 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,san
 @keyframes glow{0%,19%,100%{opacity:0}5%,14%{opacity:1}}
 .grow{transform-box:fill-box;transform-origin:0% 50%;animation:growx .9s cubic-bezier(.2,.8,.2,1) backwards}
 @keyframes growx{from{transform:scaleX(0)}}
-.pop{transform-box:fill-box;transform-origin:50% 50%;animation:pop 12s ease-in-out infinite}
-@keyframes pop{0%,19%,100%{transform:scaleY(1)}5%,14%{transform:scaleY(1.9)}}
 .ld{transform-box:fill-box;transform-origin:50% 50%;animation:dotpop 12s ease-in-out infinite}
 @keyframes dotpop{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.5)}}
 .ln{animation:hlname 12s ease-in-out infinite}
 @keyframes hlname{0%,19%,100%{fill:#e8f5ee}5%,14%{fill:#86efac}}
 .lp{animation:hlpct 12s ease-in-out infinite}
 @keyframes hlpct{0%,19%,100%{fill:#7fa398}5%,14%{fill:#e8f5ee}}
+.cshine{animation:cardsweep 12s ease-in-out infinite}
+@keyframes cardsweep{0%,4%{transform:translateX(0)}18%,100%{transform:translateX(780px)}}
 .shine{animation:sweep 6s ease-in-out 2s infinite}
 @keyframes sweep{0%{transform:translateX(0)}60%,100%{transform:translateX(1400px)}}
-@media (prefers-reduced-motion:reduce){.bd,.beacon,.tw,.wv,.dr,.pulse,.card,.hl,.grow,.pop,.ld,.ln,.lp,.shine{animation:none}}
+@media (prefers-reduced-motion:reduce){.bd,.beacon,.tw,.wv,.dr,.pulse,.card,.hl,.grow,.ld,.ln,.lp,.shine,.cshine{animation:none}}
 `;
 
 const shell = (w, h, title, defs, body) =>
@@ -456,7 +456,12 @@ function renderProjectCard(r, k) {
     `<path d="M${fx + 2} ${fy - 11} V${fy - 8} Q${fx + 2} ${fy - 6} ${fx + 7} ${fy - 6} Q${fx + 12} ${fy - 6} ${fx + 12} ${fy - 8} V${fy - 11} M${fx + 7} ${fy - 6} V${fy - 3}"/></g>` +
     `<text x="${fx + 22}" y="${fy}" font-size="14" fill="${C.muted}">${fmt(r.forkCount)}</text>`;
 
-  const defs = `<clipPath id="c"><rect x="${x}" y="${y}" width="${cardW}" height="${cardH}" rx="14"/></clipPath>`;
+  const defs =
+    `<clipPath id="c"><rect x="${x}" y="${y}" width="${cardW}" height="${cardH}" rx="14"/></clipPath>` +
+    `<linearGradient id="cs"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`;
+  const X0 = x - 130;
+  const shine =
+    `<g clip-path="url(#c)"><polygon class="cshine" points="${X0 + 40},${y} ${X0 + 130},${y} ${X0 + 90},${y + cardH} ${X0},${y + cardH}" fill="url(#cs)" style="${delay}"/></g>`;
   const body =
     `<g class="card" style="${delay}">` +
     `<g clip-path="url(#c)"><rect x="${x}" y="${y}" width="${cardW}" height="${cardH}" fill="${C.water}"/><rect x="${x}" y="${y}" width="5" height="${cardH}" fill="${lc}"/></g>` +
@@ -465,6 +470,7 @@ function renderProjectCard(r, k) {
     `<text x="${x + 30}" y="${y + 46}" font-size="23" class="serif" fill="${C.text}">${esc(name)}</text>` +
     descSvg +
     footer +
+    shine +
     `</g>`;
   return shell(W, H, `${r.name}: ${r.description || "pinned repository"}`, defs, body);
 }
@@ -492,7 +498,7 @@ function renderStack(user) {
     const w = (l.size / sum) * barW;
     segs +=
       `<g class="grow" style="animation-delay:${i * 130}ms">` +
-      `<rect class="pop" x="${x.toFixed(2)}" y="${barY}" width="${Math.max(w - 3, 2).toFixed(2)}" height="16" rx="8" fill="${l.color}" style="${turn(i)}"/></g>`;
+      `<rect x="${x.toFixed(2)}" y="${barY}" width="${Math.max(w - 3, 2).toFixed(2)}" height="16" rx="8" fill="${l.color}"/></g>`;
     x += w;
   });
 

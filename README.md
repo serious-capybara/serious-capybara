@@ -21,12 +21,6 @@ I am a frontend and full-stack engineer who enjoys building and exploring softwa
 ## Featured Projects
 
 <!--PROJECTS:START-->
-<p align="center">
-  <a href="https://github.com/serious-capybara/g-link-app"><img src="assets/project-1.svg" alt="g-link-app" width="49%" /></a>
-  <a href="https://github.com/serious-capybara/g-link-extension"><img src="assets/project-2.svg" alt="g-link-extension" width="49%" /></a>
-  <a href="https://github.com/serious-capybara/managing-sentry"><img src="assets/project-3.svg" alt="managing-sentry" width="49%" /></a>
-  <a href="https://github.com/serious-capybara/PHINMA-Education-Media-Directory"><img src="assets/project-4.svg" alt="PHINMA-Education-Media-Directory" width="49%" /></a>
-</p>
 <!--PROJECTS:END-->
 
 ## Languages
@@ -37,9 +31,11 @@ I am a frontend and full-stack engineer who enjoys building and exploring softwa
 
 ## Connect
 
+<p align="center">
 <a href="https://github.com/serious-capybara">
   <img src="https://img.shields.io/badge/GitHub-serious--capybara-86EFAC?style=for-the-badge&logo=github&logoColor=white&labelColor=14532D" alt="GitHub: serious-capybara" />
 </a>
 <a href="https://www.linkedin.com/in/resty-aldave">
   <img src="https://img.shields.io/badge/LinkedIn-resty--aldave-86EFAC?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=14532D" alt="LinkedIn: resty-aldave" />
 </a>
+</p>
