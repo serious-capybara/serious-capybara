@@ -1,0 +1,87 @@
+name: Update Featured Projects
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # every 6 hours
+  workflow_dispatch:         # lets you run it manually from the Actions tab
+  push:
+    paths:
+      - ".github/workflows/featured-projects.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch pinned repos and update README
+        uses: actions/github-script@v7
+        with:
+          # Uses PROFILE_TOKEN if you add one (optional), otherwise the default token
+          github-token: ${{ secrets.PROFILE_TOKEN || secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require("fs");
+            const login = context.repo.owner;
+
+            const data = await github.graphql(
+              `query($login: String!) {
+                user(login: $login) {
+                  pinnedItems(first: 6, types: [REPOSITORY]) {
+                    nodes {
+                      ... on Repository {
+                        name
+                        url
+                        description
+                        stargazerCount
+                        forkCount
+                        primaryLanguage { name }
+                      }
+                    }
+                  }
+                }
+              }`,
+              { login }
+            );
+
+            const repos = data.user.pinnedItems.nodes;
+            const esc = (s) =>
+              (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            const card = (r) => `
+              <td width="50%" valign="top">
+                <a href="${r.url}"><b>${esc(r.name)}</b></a><br/>
+                <sub>${esc(r.description) || "No description yet."}</sub><br/>
+                <sub>${r.primaryLanguage ? "● " + esc(r.primaryLanguage.name) + " &nbsp; " : ""}⭐ ${r.stargazerCount} &nbsp; 🍴 ${r.forkCount}</sub>
+              </td>`;
+
+            let rows = "";
+            for (let i = 0; i < repos.length; i += 2) {
+              const pair = repos.slice(i, i + 2).map(card).join("");
+              rows += `  <tr>${pair}\n  </tr>\n`;
+            }
+
+            const block = repos.length
+              ? `<table>\n${rows}</table>`
+              : "_No pinned repositories yet._";
+
+            const readme = fs.readFileSync("README.md", "utf8");
+            const start = "<!--FEATURED:START-->";
+            const end = "<!--FEATURED:END-->";
+            const re = new RegExp(`${start}[\\s\\S]*?${end}`);
+
+            if (!re.test(readme)) {
+              core.setFailed("Markers <!--FEATURED:START--> / <!--FEATURED:END--> not found in README.md");
+              return;
+            }
+
+            fs.writeFileSync("README.md", readme.replace(re, `${start}\n${block}\n${end}`));
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git diff --cached --quiet || (git commit -m "chore: update featured projects" && git push)
