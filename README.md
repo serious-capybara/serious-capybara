@@ -22,9 +22,8 @@ I like turning ideas into clean, useful software and sharing the work in public.
 
 ## Featured Projects
 
-<p align="center">
-  <img src="https://www.gitskins.com/api/section/projects?username=serious-capybara&theme=aurora&avatar=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F117162931%3Fu%3D9d2ceee4ad066e5e850adce68305648a4f3eba9b%26v%3D4" alt="Featured projects by serious-capybara" width="100%" />
-</p>
+<!--FEATURED:START-->
+<!--FEATURED:END-->
 
 ## Highlights
 
