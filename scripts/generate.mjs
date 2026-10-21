@@ -13,7 +13,7 @@ const MOCK = process.argv.includes("--mock");
 const CONFIG = {
   displayName: "dr.capybara",
   tagline: "Frontend and full-stack engineer",
-  blurb: "I turn ideas into clean, useful software and build it in public.",
+  blurb: "Building thoughtful software that makes everyday life simpler.",
   chips: ["JavaScript", "HTML", "Kotlin"],
 };
 
@@ -80,7 +80,16 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,san
 @keyframes beacon{0%,100%{opacity:0}50%{opacity:.5}}
 .tw{animation:tw 4.5s ease-in-out infinite}
 @keyframes tw{0%,100%{opacity:.12}50%{opacity:.6}}
-@media (prefers-reduced-motion:reduce){.bd,.beacon,.tw{animation:none}}
+.wv{animation:wave 26s linear infinite}
+.w2{animation-duration:18s;animation-direction:reverse}
+.w3{animation-duration:13s}
+@keyframes wave{to{transform:translateX(-1200px)}}
+.dr{animation:drift 14s ease-in-out infinite alternate}
+.d2{animation-duration:18s;animation-direction:alternate-reverse}
+@keyframes drift{to{transform:translate(-90px,30px)}}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 4.5s ease-out infinite}
+@keyframes pulse{0%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(1.4)}}
+@media (prefers-reduced-motion:reduce){.bd,.beacon,.tw,.wv,.dr,.pulse{animation:none}}
 `;
 
 const shell = (w, h, title, defs, body) =>
@@ -214,16 +223,28 @@ function renderHero(user, avatar) {
     })
     .join("");
 
+  // Waves are drawn 2400px wide (4 full periods of 600) and slide left by 1200px, so the loop is seamless.
+  const waveD = (y) => {
+    let d = `M0 ${y} Q150 ${y - 18} 300 ${y}`;
+    for (let k = 2; k <= 8; k++) d += ` T${k * 300} ${y}`;
+    return d + ` V${H} H0 Z`;
+  };
   const waves = [
-    { y: 244, o: 0.035 },
-    { y: 262, o: 0.045 },
-    { y: 282, o: 0.06 },
+    { y: 240, o: 0.035, cls: "w1" },
+    { y: 260, o: 0.045, cls: "w2" },
+    { y: 282, o: 0.06, cls: "w3" },
   ]
-    .map(
-      (w) =>
-        `<path d="M0 ${w.y} C200 ${w.y - 20} 400 ${w.y + 20} 600 ${w.y} S1000 ${w.y - 20} 1200 ${w.y} V${H} H0 Z" fill="${C.mint}" fill-opacity="${w.o}"/>`
-    )
+    .map((w) => `<path class="wv ${w.cls}" d="${waveD(w.y)}" fill="${C.mint}" fill-opacity="${w.o}"/>`)
     .join("");
+
+  const rand = rng(11);
+  let stars = "";
+  for (let k = 0; k < 30; k++) {
+    const x = 20 + rand() * (W - 40);
+    const y = 14 + rand() * 200;
+    if (x < 830 && y > 62) continue; // keep the text area clear
+    stars += `<circle class="tw" cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(0.7 + rand() * 0.8).toFixed(1)}" fill="${C.text}" style="opacity:.3;animation-delay:${Math.round(rand() * 4500)}ms"/>`;
+  }
 
   const face = avatar
     ? `<image href="${avatar}" x="76" y="76" width="148" height="148" clip-path="url(#av)" preserveAspectRatio="xMidYMid slice"/>`
@@ -233,12 +254,21 @@ function renderHero(user, avatar) {
     clip("card", W, H) +
     `<clipPath id="av"><circle cx="150" cy="150" r="74"/></clipPath>` +
     `<radialGradient id="glow" cx="150" cy="150" r="260" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.teal}" stop-opacity=".18"/><stop offset="1" stop-color="${C.teal}" stop-opacity="0"/></radialGradient>` +
+    `<radialGradient id="aur1"><stop offset="0" stop-color="${C.teal}" stop-opacity=".16"/><stop offset="1" stop-color="${C.teal}" stop-opacity="0"/></radialGradient>` +
+    `<radialGradient id="aur2"><stop offset="0" stop-color="${C.mint}" stop-opacity=".12"/><stop offset="1" stop-color="${C.mint}" stop-opacity="0"/></radialGradient>` +
     `<linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.mint}"/><stop offset="1" stop-color="${C.teal}"/></linearGradient>`;
 
   const body =
     panel(W, H) +
-    `<g clip-path="url(#card)"><rect width="${W}" height="${H}" fill="url(#glow)"/>${waves}</g>` +
+    `<g clip-path="url(#card)">` +
+    `<rect width="${W}" height="${H}" fill="url(#glow)"/>` +
+    `<circle class="dr d1" cx="930" cy="70" r="270" fill="url(#aur1)"/>` +
+    `<circle class="dr d2" cx="1080" cy="250" r="230" fill="url(#aur2)"/>` +
+    stars +
+    waves +
+    `</g>` +
     `<circle cx="150" cy="150" r="80" fill="none" stroke="url(#ring)" stroke-width="3"/>` +
+    `<circle class="pulse" cx="150" cy="150" r="80" fill="none" stroke="url(#ring)" stroke-width="2" style="opacity:0"/>` +
     face +
     `<text x="270" y="98" font-size="17" fill="${C.muted}">@${esc(user.login)}</text>` +
     `<text x="268" y="162" font-size="60" class="serif" fill="${C.text}">${esc(CONFIG.displayName)}</text>` +
