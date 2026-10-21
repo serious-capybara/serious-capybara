@@ -34,5 +34,3 @@
 <a href="https://www.linkedin.com/in/resty-aldave">
   <img src="https://img.shields.io/badge/LinkedIn-resty--aldave-86EFAC?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=14532D" alt="LinkedIn: resty-aldave" />
 </a>
-
-<sub>Contribution city generated with <a href="https://www.gitskins.com/readme-generator">GitSkins</a></sub>
