@@ -90,7 +90,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,san
 .pulse{transform-box:fill-box;transform-origin:center;animation:pulse 4.5s ease-out infinite}
 @keyframes pulse{0%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(1.4)}}
 .card{transform-box:fill-box;transform-origin:50% 50%;animation:lift 12s ease-in-out infinite}
-@keyframes lift{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.05)}}
+@keyframes lift{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.02)}}
 .hl{animation:glow 12s ease-in-out infinite}
 @keyframes glow{0%,19%,100%{opacity:0}5%,14%{opacity:1}}
 .grow{transform-box:fill-box;transform-origin:0% 50%;animation:growx .9s cubic-bezier(.2,.8,.2,1) backwards}
@@ -428,7 +428,7 @@ function renderStats(user, cal) {
 
 // One image per pinned repo, so each card can sit inside a real link in the README.
 function renderProjectCard(r, k) {
-  const cardW = 586, cardH = 160, padX = 15, padY = 8;
+  const cardW = 586, cardH = 160, padX = 6, padY = 4;
   const W = cardW + padX * 2, H = cardH + padY * 2;
   const x = padX, y = padY;
   const lang = r.primaryLanguage;
@@ -466,7 +466,7 @@ function renderProjectCard(r, k) {
     `<g class="card" style="${delay}">` +
     `<g clip-path="url(#c)"><rect x="${x}" y="${y}" width="${cardW}" height="${cardH}" fill="${C.water}"/><rect x="${x}" y="${y}" width="5" height="${cardH}" fill="${lc}"/></g>` +
     `<rect x="${x + 0.75}" y="${y + 0.75}" width="${cardW - 1.5}" height="${cardH - 1.5}" rx="14" fill="none" stroke="${C.edge}" stroke-width="1.5"/>` +
-    `<rect class="hl" x="${x + 1}" y="${y + 1}" width="${cardW - 2}" height="${cardH - 2}" rx="14" fill="none" stroke="${C.mint}" stroke-width="2" style="opacity:0;${delay}"/>` +
+    `<rect class="hl" x="${x + 1}" y="${y + 1}" width="${cardW - 2}" height="${cardH - 2}" rx="14" fill="${C.mint}" fill-opacity=".07" stroke="${C.mint}" stroke-width="2" style="opacity:0;${delay}"/>` +
     `<text x="${x + 30}" y="${y + 46}" font-size="23" class="serif" fill="${C.text}">${esc(name)}</text>` +
     descSvg +
     footer +
