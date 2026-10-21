@@ -17,17 +17,25 @@ const CONFIG = {
   chips: ["JavaScript", "HTML", "Kotlin"],
 };
 
-const C = {
-  night: "#08161a",
-  water: "#0d2428",
-  edge: "#1d3d42",
-  mint: "#86efac",
-  teal: "#5eead4",
-  amber: "#f2c879",
-  text: "#e8f5ee",
-  muted: "#7fa398",
-  dim: "#16343a",
+const THEMES = {
+  dark: {
+    night: "#08161a", water: "#0d2428", edge: "#1d3d42",
+    mint: "#86efac", teal: "#5eead4", amber: "#f2c879", sun: "#f2c879",
+    text: "#e8f5ee", muted: "#7fa398", dim: "#16343a",
+    low: "#1f8a7c", high: "#9bf7c0", faceL: 0.62, faceR: 0.42,
+    stars: true, waveK: 1, glowK: 1, shine: "#ffffff", shineO: 0.18,
+    hlName: "#e8f5ee", hlNameOn: "#86efac", hlPct: "#7fa398", hlPctOn: "#e8f5ee",
+  },
+  light: {
+    night: "#f4faf6", water: "#ffffff", edge: "#cfe3d6",
+    mint: "#15803d", teal: "#0f766e", amber: "#c2790a", sun: "#f6b93b",
+    text: "#0f2a22", muted: "#527166", dim: "#e3f0e8",
+    low: "#8fd9c2", high: "#0f766e", faceL: 0.8, faceR: 0.64,
+    stars: false, waveK: 1.6, glowK: 0.5, shine: "#16a34a", shineO: 0.16,
+    hlName: "#0f2a22", hlNameOn: "#15803d", hlPct: "#527166", hlPctOn: "#0f2a22",
+  },
 };
+let C = THEMES.dark; // swapped before each render pass
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 const esc = (s) =>
@@ -71,7 +79,7 @@ function rng(seed) {
   return () => ((s = (s * 16807) % 2147483647) - 1) / 2147483646;
 }
 
-const baseCss = `
+const css = () => `
 text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
 .serif{font-family:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif}
 .bd{transform-box:fill-box;transform-origin:50% 100%;animation:rise 1s cubic-bezier(.2,.8,.2,1) backwards}
@@ -98,9 +106,9 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,san
 .ld{transform-box:fill-box;transform-origin:50% 50%;animation:dotpop 12s ease-in-out infinite}
 @keyframes dotpop{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.5)}}
 .ln{animation:hlname 12s ease-in-out infinite}
-@keyframes hlname{0%,19%,100%{fill:#e8f5ee}5%,14%{fill:#86efac}}
+@keyframes hlname{0%,19%,100%{fill:${C.hlName}}5%,14%{fill:${C.hlNameOn}}}
 .lp{animation:hlpct 12s ease-in-out infinite}
-@keyframes hlpct{0%,19%,100%{fill:#7fa398}5%,14%{fill:#e8f5ee}}
+@keyframes hlpct{0%,19%,100%{fill:${C.hlPct}}5%,14%{fill:${C.hlPctOn}}}
 .cshine{animation:cardsweep 12s ease-in-out infinite}
 @keyframes cardsweep{0%,4%{transform:translateX(0)}18%,100%{transform:translateX(780px)}}
 .shine{animation:sweep 6s ease-in-out 2s infinite}
@@ -109,7 +117,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,san
 `;
 
 const shell = (w, h, title, defs, body) =>
-  `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(title)}"><title>${esc(title)}</title><style>${baseCss}</style><defs>${defs}</defs>${body}</svg>`;
+  `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(title)}"><title>${esc(title)}</title><style>${css()}</style><defs>${defs}</defs>${body}</svg>`;
 
 const panel = (w, h) =>
   `<rect width="${w}" height="${h}" rx="18" fill="${C.night}"/>` +
@@ -250,7 +258,7 @@ function renderHero(user, avatar) {
     { y: 260, o: 0.045, cls: "w2" },
     { y: 282, o: 0.06, cls: "w3" },
   ]
-    .map((w) => `<path class="wv ${w.cls}" d="${waveD(w.y)}" fill="${C.mint}" fill-opacity="${w.o}"/>`)
+    .map((w) => `<path class="wv ${w.cls}" d="${waveD(w.y)}" fill="${C.mint}" fill-opacity="${(w.o * C.waveK).toFixed(3)}"/>`)
     .join("");
 
   const rand = rng(11);
@@ -262,6 +270,8 @@ function renderHero(user, avatar) {
     stars += `<circle class="tw" cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(0.7 + rand() * 0.8).toFixed(1)}" fill="${C.text}" style="opacity:.3;animation-delay:${Math.round(rand() * 4500)}ms"/>`;
   }
 
+  if (!C.stars) stars = "";
+
   const face = avatar
     ? `<image href="${avatar}" x="76" y="76" width="148" height="148" clip-path="url(#av)" preserveAspectRatio="xMidYMid slice"/>`
     : `<circle cx="150" cy="150" r="74" fill="${C.water}"/><text x="150" y="168" text-anchor="middle" font-size="52" class="serif" fill="${C.mint}">${esc(CONFIG.displayName.slice(0, 2))}</text>`;
@@ -269,9 +279,9 @@ function renderHero(user, avatar) {
   const defs =
     clip("card", W, H) +
     `<clipPath id="av"><circle cx="150" cy="150" r="74"/></clipPath>` +
-    `<radialGradient id="glow" cx="150" cy="150" r="260" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.teal}" stop-opacity=".18"/><stop offset="1" stop-color="${C.teal}" stop-opacity="0"/></radialGradient>` +
-    `<radialGradient id="aur1"><stop offset="0" stop-color="${C.teal}" stop-opacity=".16"/><stop offset="1" stop-color="${C.teal}" stop-opacity="0"/></radialGradient>` +
-    `<radialGradient id="aur2"><stop offset="0" stop-color="${C.mint}" stop-opacity=".12"/><stop offset="1" stop-color="${C.mint}" stop-opacity="0"/></radialGradient>` +
+    `<radialGradient id="glow" cx="150" cy="150" r="260" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.teal}" stop-opacity="${(0.18 * C.glowK).toFixed(2)}"/><stop offset="1" stop-color="${C.teal}" stop-opacity="0"/></radialGradient>` +
+    `<radialGradient id="aur1"><stop offset="0" stop-color="${C.teal}" stop-opacity="${(0.16 * C.glowK).toFixed(2)}"/><stop offset="1" stop-color="${C.teal}" stop-opacity="0"/></radialGradient>` +
+    `<radialGradient id="aur2"><stop offset="0" stop-color="${C.mint}" stop-opacity="${(0.12 * C.glowK).toFixed(2)}"/><stop offset="1" stop-color="${C.mint}" stop-opacity="0"/></radialGradient>` +
     `<linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${C.mint}"/><stop offset="1" stop-color="${C.teal}"/></linearGradient>`;
 
   const body =
@@ -317,7 +327,7 @@ function renderSkyline(cal) {
   const max = Math.max(1, ...days.map((d) => d.n));
   const pt = (x, y) => `${x.toFixed(1)},${y.toFixed(1)}`;
   const center = (d) => [ox + (d.i - d.j) * a, oy + (d.i + d.j) * b + b];
-  const LOW = "#1f8a7c", HIGH = "#9bf7c0";
+  const LOW = C.low, HIGH = C.high;
 
   // Floor tiles
   const floor = days
@@ -339,7 +349,7 @@ function renderSkyline(cal) {
       const t = d.n / max;
       const h = 6 + Math.pow(t, 0.85) * (maxH - 6);
       const top = mix(LOW, HIGH, Math.pow(t, 0.7));
-      const left = shade(top, 0.62), right = shade(top, 0.42);
+      const left = shade(top, C.faceL), right = shade(top, C.faceR);
       const [cx, cy] = center(d);
       const hw = a * s, hh = b * s;
       const T = [cx, cy - hh], R = [cx + hw, cy], B = [cx, cy + hh], L = [cx - hw, cy];
@@ -372,6 +382,8 @@ function renderSkyline(cal) {
     stars += `<circle class="tw" cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(0.7 + rand() * 0.8).toFixed(1)}" fill="${C.text}" style="opacity:.35;animation-delay:${Math.round(rand() * 4000)}ms"/>`;
   }
 
+  if (!C.stars) stars = "";
+
   // Legend (top right)
   const sq = 1016;
   const legend =
@@ -383,12 +395,12 @@ function renderSkyline(cal) {
 
   const defs =
     clip("card", W, H) +
-    `<radialGradient id="glow" cx="600" cy="300" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.teal}" stop-opacity=".12"/><stop offset="1" stop-color="${C.teal}" stop-opacity="0"/></radialGradient>` +
-    `<radialGradient id="moon" cx="64" cy="54" r="60" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.amber}" stop-opacity=".28"/><stop offset="1" stop-color="${C.amber}" stop-opacity="0"/></radialGradient>`;
+    `<radialGradient id="glow" cx="600" cy="300" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.teal}" stop-opacity="${(0.12 * C.glowK).toFixed(2)}"/><stop offset="1" stop-color="${C.teal}" stop-opacity="0"/></radialGradient>` +
+    `<radialGradient id="moon" cx="64" cy="54" r="60" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.sun}" stop-opacity=".28"/><stop offset="1" stop-color="${C.sun}" stop-opacity="0"/></radialGradient>`;
 
   const body =
     panel(W, H) +
-    `<g clip-path="url(#card)"><rect width="${W}" height="${H}" fill="url(#glow)"/>${stars}<circle cx="64" cy="54" r="60" fill="url(#moon)"/><circle cx="64" cy="54" r="13" fill="${C.amber}"/></g>` +
+    `<g clip-path="url(#card)"><rect width="${W}" height="${H}" fill="url(#glow)"/>${stars}<circle cx="64" cy="54" r="60" fill="url(#moon)"/><circle cx="64" cy="54" r="13" fill="${C.sun}"/></g>` +
     `<g fill="${C.water}" stroke="${C.edge}" stroke-width="1">${floor}</g>` +
     buildings +
     legend +
@@ -458,7 +470,7 @@ function renderProjectCard(r, k) {
 
   const defs =
     `<clipPath id="c"><rect x="${x}" y="${y}" width="${cardW}" height="${cardH}" rx="14"/></clipPath>` +
-    `<linearGradient id="cs"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`;
+    `<linearGradient id="cs"><stop offset="0" stop-color="${C.shine}" stop-opacity="0"/><stop offset=".5" stop-color="${C.shine}" stop-opacity="${C.shineO}"/><stop offset="1" stop-color="${C.shine}" stop-opacity="0"/></linearGradient>`;
   const X0 = x - 130;
   const shine =
     `<g clip-path="url(#c)"><polygon class="cshine" points="${X0 + 40},${y} ${X0 + 130},${y} ${X0 + 90},${y + cardH} ${X0},${y + cardH}" fill="url(#cs)" style="${delay}"/></g>`;
@@ -530,6 +542,10 @@ function renderStack(user) {
   return shell(W, H, "Most used languages", defs, body);
 }
 
+// <picture> makes GitHub show the dark image in dark mode and the light image in light mode.
+const pic = (base, alt, width) =>
+  `<picture><source media="(prefers-color-scheme: dark)" srcset="assets/${base}-dark.svg"><source media="(prefers-color-scheme: light)" srcset="assets/${base}-light.svg"><img src="assets/${base}-light.svg" alt="${esc(alt)}" width="${width}" /></picture>`;
+
 // Rewrites the block between the PROJECTS markers in README.md so the right number of cards is linked.
 async function updateReadme(repos) {
   let readme;
@@ -547,7 +563,7 @@ async function updateReadme(repos) {
   }
   const block = repos.length
     ? `<p align="center">\n${repos
-        .map((r, k) => `  <a href="${esc(r.url)}"><img src="assets/project-${k + 1}.svg" alt="${esc(r.name)}" width="49%" /></a>`)
+        .map((r, k) => `  <a href="${esc(r.url)}">${pic(`project-${k + 1}`, r.name, "49%")}</a>`)
         .join("\n")}\n</p>`
     : "_Pin up to six repositories on your GitHub profile and they will appear here._";
   const next = readme.replace(re, () => `${start}\n${block}\n${end}`);
@@ -563,18 +579,20 @@ async function main() {
   const repos = user.pinnedItems.nodes;
 
   await fs.mkdir(OUT, { recursive: true });
-  const files = {
-    "hero.svg": renderHero(user, avatar),
-    "contributions.svg": renderSkyline(cal),
-    "stats.svg": renderStats(user, cal),
-    "stack.svg": renderStack(user),
-  };
-  repos.forEach((r, k) => (files[`project-${k + 1}.svg`] = renderProjectCard(r, k)));
+  const files = {};
+  for (const theme of Object.keys(THEMES)) {
+    C = THEMES[theme];
+    files[`hero-${theme}.svg`] = renderHero(user, avatar);
+    files[`contributions-${theme}.svg`] = renderSkyline(cal);
+    files[`stats-${theme}.svg`] = renderStats(user, cal);
+    files[`stack-${theme}.svg`] = renderStack(user);
+    repos.forEach((r, k) => (files[`project-${k + 1}-${theme}.svg`] = renderProjectCard(r, k)));
+  }
   for (const [name, svg] of Object.entries(files)) await fs.writeFile(`${OUT}/${name}`, svg);
 
-  // Remove cards from earlier runs that no longer exist (and the old single projects.svg)
+  // Remove any older SVGs that are no longer produced (previous names, unpinned projects)
   for (const f of await fs.readdir(OUT)) {
-    if ((/^project-\d+\.svg$/.test(f) || f === "projects.svg") && !(f in files)) await fs.unlink(`${OUT}/${f}`);
+    if (f.endsWith(".svg") && !(f in files)) await fs.unlink(`${OUT}/${f}`);
   }
 
   await updateReadme(repos);
