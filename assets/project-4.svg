@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="634" height="184" viewBox="0 0 634 184" role="img" aria-label="PHINMA-Education-Media-Directory: PHINMAEducationMediaDirectory is a student-initiated web project that centralizes official websites, emails, and social media pages of PHINMA-affiliated schools. It organizes links through a clear academic hierarchy to make school information easier to find. The project is open, scalable, and designed for future contributions by individual schools."><title>PHINMA-Education-Media-Directory: PHINMAEducationMediaDirectory is a student-initiated web project that centralizes official websites, emails, and social media pages of PHINMA-affiliated schools. It organizes links through a clear academic hierarchy to make school information easier to find. The project is open, scalable, and designed for future contributions by individual schools.</title><style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.serif{font-family:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif}
+.bd{transform-box:fill-box;transform-origin:50% 100%;animation:rise 1s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes rise{from{transform:scaleY(0)}}
+.beacon{opacity:0;animation:beacon 3.4s ease-in-out infinite}
+@keyframes beacon{0%,100%{opacity:0}50%{opacity:.5}}
+.tw{animation:tw 4.5s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.12}50%{opacity:.6}}
+.wv{animation:wave 26s linear infinite}
+.w2{animation-duration:18s;animation-direction:reverse}
+.w3{animation-duration:13s}
+@keyframes wave{to{transform:translateX(-1200px)}}
+.dr{animation:drift 14s ease-in-out infinite alternate}
+.d2{animation-duration:18s;animation-direction:alternate-reverse}
+@keyframes drift{to{transform:translate(-90px,30px)}}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 4.5s ease-out infinite}
+@keyframes pulse{0%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(1.4)}}
+.card{transform-box:fill-box;transform-origin:50% 50%;animation:lift 12s ease-in-out infinite}
+@keyframes lift{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.06)}}
+.hl{animation:glow 12s ease-in-out infinite}
+@keyframes glow{0%,19%,100%{opacity:0}5%,14%{opacity:1}}
+.grow{transform-box:fill-box;transform-origin:0% 50%;animation:growx .9s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes growx{from{transform:scaleX(0)}}
+.pop{transform-box:fill-box;transform-origin:50% 50%;animation:pop 12s ease-in-out infinite}
+@keyframes pop{0%,19%,100%{transform:scaleY(1)}5%,14%{transform:scaleY(1.9)}}
+.ld{transform-box:fill-box;transform-origin:50% 50%;animation:dotpop 12s ease-in-out infinite}
+@keyframes dotpop{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.5)}}
+.ln{animation:hlname 12s ease-in-out infinite}
+@keyframes hlname{0%,19%,100%{fill:#e8f5ee}5%,14%{fill:#86efac}}
+.lp{animation:hlpct 12s ease-in-out infinite}
+@keyframes hlpct{0%,19%,100%{fill:#7fa398}5%,14%{fill:#e8f5ee}}
+.shine{animation:sweep 6s ease-in-out 2s infinite}
+@keyframes sweep{0%{transform:translateX(0)}60%,100%{transform:translateX(1400px)}}
+@media (prefers-reduced-motion:reduce){.bd,.beacon,.tw,.wv,.dr,.pulse,.card,.hl,.grow,.pop,.ld,.ln,.lp,.shine{animation:none}}
+</style><defs><clipPath id="c"><rect x="24" y="12" width="586" height="160" rx="14"/></clipPath></defs><g class="card" style="animation-delay:6000ms"><g clip-path="url(#c)"><rect x="24" y="12" width="586" height="160" fill="#0d2428"/><rect x="24" y="12" width="5" height="160" fill="#e34c26"/></g><rect x="24.75" y="12.75" width="584.5" height="158.5" rx="14" fill="none" stroke="#1d3d42" stroke-width="1.5"/><rect class="hl" x="25" y="13" width="584" height="158" rx="14" fill="none" stroke="#86efac" stroke-width="2" style="opacity:0;animation-delay:6000ms"/><text x="54" y="58" font-size="23" class="serif" fill="#e8f5ee">PHINMA-Education-Media-Directory</text><text x="54" y="90" font-size="15" fill="#7fa398">PHINMAEducationMediaDirectory is a student-initiated web</text><text x="54" y="112" font-size="15" fill="#7fa398">project that centralizes official websites, emails, and socia…</text><circle cx="59" cy="145" r="5" fill="#e34c26"/><text x="72" y="150" font-size="14" fill="#e8f5ee">HTML</text><polygon points="135.40,137.00 137.16,141.57 142.06,141.84 138.25,144.93 139.51,149.66 135.40,147.00 131.29,149.66 132.55,144.93 128.74,141.84 133.64,141.57" fill="#f2c879"/><text x="148.4" y="150" font-size="14" fill="#7fa398">1</text><g fill="none" stroke="#7fa398" stroke-width="1.5"><circle cx="180.4" cy="137" r="2"/><circle cx="190.4" cy="137" r="2"/><circle cx="185.4" cy="149" r="2"/><path d="M180.4 139 V142 Q180.4 144 185.4 144 Q190.4 144 190.4 142 V139 M185.4 144 V147"/></g><text x="200.4" y="150" font-size="14" fill="#7fa398">0</text></g></svg>

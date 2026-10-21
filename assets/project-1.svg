@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="634" height="184" viewBox="0 0 634 184" role="img" aria-label="g-link-app: pinned repository"><title>g-link-app: pinned repository</title><style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.serif{font-family:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif}
+.bd{transform-box:fill-box;transform-origin:50% 100%;animation:rise 1s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes rise{from{transform:scaleY(0)}}
+.beacon{opacity:0;animation:beacon 3.4s ease-in-out infinite}
+@keyframes beacon{0%,100%{opacity:0}50%{opacity:.5}}
+.tw{animation:tw 4.5s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.12}50%{opacity:.6}}
+.wv{animation:wave 26s linear infinite}
+.w2{animation-duration:18s;animation-direction:reverse}
+.w3{animation-duration:13s}
+@keyframes wave{to{transform:translateX(-1200px)}}
+.dr{animation:drift 14s ease-in-out infinite alternate}
+.d2{animation-duration:18s;animation-direction:alternate-reverse}
+@keyframes drift{to{transform:translate(-90px,30px)}}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 4.5s ease-out infinite}
+@keyframes pulse{0%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(1.4)}}
+.card{transform-box:fill-box;transform-origin:50% 50%;animation:lift 12s ease-in-out infinite}
+@keyframes lift{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.06)}}
+.hl{animation:glow 12s ease-in-out infinite}
+@keyframes glow{0%,19%,100%{opacity:0}5%,14%{opacity:1}}
+.grow{transform-box:fill-box;transform-origin:0% 50%;animation:growx .9s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes growx{from{transform:scaleX(0)}}
+.pop{transform-box:fill-box;transform-origin:50% 50%;animation:pop 12s ease-in-out infinite}
+@keyframes pop{0%,19%,100%{transform:scaleY(1)}5%,14%{transform:scaleY(1.9)}}
+.ld{transform-box:fill-box;transform-origin:50% 50%;animation:dotpop 12s ease-in-out infinite}
+@keyframes dotpop{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.5)}}
+.ln{animation:hlname 12s ease-in-out infinite}
+@keyframes hlname{0%,19%,100%{fill:#e8f5ee}5%,14%{fill:#86efac}}
+.lp{animation:hlpct 12s ease-in-out infinite}
+@keyframes hlpct{0%,19%,100%{fill:#7fa398}5%,14%{fill:#e8f5ee}}
+.shine{animation:sweep 6s ease-in-out 2s infinite}
+@keyframes sweep{0%{transform:translateX(0)}60%,100%{transform:translateX(1400px)}}
+@media (prefers-reduced-motion:reduce){.bd,.beacon,.tw,.wv,.dr,.pulse,.card,.hl,.grow,.pop,.ld,.ln,.lp,.shine{animation:none}}
+</style><defs><clipPath id="c"><rect x="24" y="12" width="586" height="160" rx="14"/></clipPath></defs><g class="card" style="animation-delay:0ms"><g clip-path="url(#c)"><rect x="24" y="12" width="586" height="160" fill="#0d2428"/><rect x="24" y="12" width="5" height="160" fill="#A97BFF"/></g><rect x="24.75" y="12.75" width="584.5" height="158.5" rx="14" fill="none" stroke="#1d3d42" stroke-width="1.5"/><rect class="hl" x="25" y="13" width="584" height="158" rx="14" fill="none" stroke="#86efac" stroke-width="2" style="opacity:0;animation-delay:0ms"/><text x="54" y="58" font-size="23" class="serif" fill="#e8f5ee">g-link-app</text><text x="54" y="90" font-size="15" fill="#7fa398" fill-opacity=".6">No description yet.</text><circle cx="59" cy="145" r="5" fill="#A97BFF"/><text x="72" y="150" font-size="14" fill="#e8f5ee">Kotlin</text><polygon points="150.60,137.00 152.36,141.57 157.26,141.84 153.45,144.93 154.71,149.66 150.60,147.00 146.49,149.66 147.75,144.93 143.94,141.84 148.84,141.57" fill="#f2c879"/><text x="163.6" y="150" font-size="14" fill="#7fa398">0</text><g fill="none" stroke="#7fa398" stroke-width="1.5"><circle cx="195.6" cy="137" r="2"/><circle cx="205.6" cy="137" r="2"/><circle cx="200.6" cy="149" r="2"/><path d="M195.6 139 V142 Q195.6 144 200.6 144 Q205.6 144 205.6 142 V139 M200.6 144 V147"/></g><text x="215.6" y="150" font-size="14" fill="#7fa398">0</text></g></svg>

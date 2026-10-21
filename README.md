@@ -21,6 +21,12 @@ I am a frontend and full-stack engineer who enjoys building and exploring softwa
 ## Featured Projects
 
 <!--PROJECTS:START-->
+<p align="center">
+  <a href="https://github.com/serious-capybara/g-link-app"><img src="assets/project-1.svg" alt="g-link-app" width="49%" /></a>
+  <a href="https://github.com/serious-capybara/g-link-extension"><img src="assets/project-2.svg" alt="g-link-extension" width="49%" /></a>
+  <a href="https://github.com/serious-capybara/managing-sentry"><img src="assets/project-3.svg" alt="managing-sentry" width="49%" /></a>
+  <a href="https://github.com/serious-capybara/PHINMA-Education-Media-Directory"><img src="assets/project-4.svg" alt="PHINMA-Education-Media-Directory" width="49%" /></a>
+</p>
 <!--PROJECTS:END-->
 
 ## Languages
