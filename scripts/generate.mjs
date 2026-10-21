@@ -90,7 +90,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,san
 .pulse{transform-box:fill-box;transform-origin:center;animation:pulse 4.5s ease-out infinite}
 @keyframes pulse{0%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(1.4)}}
 .card{transform-box:fill-box;transform-origin:50% 50%;animation:lift 12s ease-in-out infinite}
-@keyframes lift{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.06)}}
+@keyframes lift{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.05)}}
 .hl{animation:glow 12s ease-in-out infinite}
 @keyframes glow{0%,19%,100%{opacity:0}5%,14%{opacity:1}}
 .grow{transform-box:fill-box;transform-origin:0% 50%;animation:growx .9s cubic-bezier(.2,.8,.2,1) backwards}
@@ -428,7 +428,7 @@ function renderStats(user, cal) {
 
 // One image per pinned repo, so each card can sit inside a real link in the README.
 function renderProjectCard(r, k) {
-  const cardW = 586, cardH = 160, padX = 24, padY = 12;
+  const cardW = 586, cardH = 160, padX = 15, padY = 8;
   const W = cardW + padX * 2, H = cardH + padY * 2;
   const x = padX, y = padY;
   const lang = r.primaryLanguage;
