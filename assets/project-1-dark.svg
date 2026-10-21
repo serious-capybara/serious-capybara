@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="598" height="168" viewBox="0 0 598 168" role="img" aria-label="g-link-app: pinned repository"><title>g-link-app: pinned repository</title><style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+.serif{font-family:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif}
+.bd{transform-box:fill-box;transform-origin:50% 100%;animation:rise 1s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes rise{from{transform:scaleY(0)}}
+.beacon{opacity:0;animation:beacon 3.4s ease-in-out infinite}
+@keyframes beacon{0%,100%{opacity:0}50%{opacity:.5}}
+.tw{animation:tw 4.5s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.12}50%{opacity:.6}}
+.wv{animation:wave 26s linear infinite}
+.w2{animation-duration:18s;animation-direction:reverse}
+.w3{animation-duration:13s}
+@keyframes wave{to{transform:translateX(-1200px)}}
+.dr{animation:drift 14s ease-in-out infinite alternate}
+.d2{animation-duration:18s;animation-direction:alternate-reverse}
+@keyframes drift{to{transform:translate(-90px,30px)}}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 4.5s ease-out infinite}
+@keyframes pulse{0%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(1.4)}}
+.card{transform-box:fill-box;transform-origin:50% 50%;animation:lift 12s ease-in-out infinite}
+@keyframes lift{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.02)}}
+.hl{animation:glow 12s ease-in-out infinite}
+@keyframes glow{0%,19%,100%{opacity:0}5%,14%{opacity:1}}
+.grow{transform-box:fill-box;transform-origin:0% 50%;animation:growx .9s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes growx{from{transform:scaleX(0)}}
+.ld{transform-box:fill-box;transform-origin:50% 50%;animation:dotpop 12s ease-in-out infinite}
+@keyframes dotpop{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.5)}}
+.ln{animation:hlname 12s ease-in-out infinite}
+@keyframes hlname{0%,19%,100%{fill:#e8f5ee}5%,14%{fill:#86efac}}
+.lp{animation:hlpct 12s ease-in-out infinite}
+@keyframes hlpct{0%,19%,100%{fill:#7fa398}5%,14%{fill:#e8f5ee}}
+.cshine{animation:cardsweep 12s ease-in-out infinite}
+@keyframes cardsweep{0%,4%{transform:translateX(0)}18%,100%{transform:translateX(780px)}}
+.shine{animation:sweep 6s ease-in-out 2s infinite}
+@keyframes sweep{0%{transform:translateX(0)}60%,100%{transform:translateX(1400px)}}
+@media (prefers-reduced-motion:reduce){.bd,.beacon,.tw,.wv,.dr,.pulse,.card,.hl,.grow,.ld,.ln,.lp,.shine,.cshine{animation:none}}
+</style><defs><clipPath id="c"><rect x="6" y="4" width="586" height="160" rx="14"/></clipPath><linearGradient id="cs"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset=".5" stop-color="#ffffff" stop-opacity="0.18"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient></defs><g class="card" style="animation-delay:0ms"><g clip-path="url(#c)"><rect x="6" y="4" width="586" height="160" fill="#0d2428"/><rect x="6" y="4" width="5" height="160" fill="#A97BFF"/></g><rect x="6.75" y="4.75" width="584.5" height="158.5" rx="14" fill="none" stroke="#1d3d42" stroke-width="1.5"/><rect class="hl" x="7" y="5" width="584" height="158" rx="14" fill="#86efac" fill-opacity=".07" stroke="#86efac" stroke-width="2" style="opacity:0;animation-delay:0ms"/><text x="36" y="50" font-size="23" class="serif" fill="#e8f5ee">g-link-app</text><text x="36" y="82" font-size="15" fill="#7fa398" fill-opacity=".6">No description yet.</text><circle cx="41" cy="137" r="5" fill="#A97BFF"/><text x="54" y="142" font-size="14" fill="#e8f5ee">Kotlin</text><polygon points="132.60,129.00 134.36,133.57 139.26,133.84 135.45,136.93 136.71,141.66 132.60,139.00 128.49,141.66 129.75,136.93 125.94,133.84 130.84,133.57" fill="#f2c879"/><text x="145.6" y="142" font-size="14" fill="#7fa398">0</text><g fill="none" stroke="#7fa398" stroke-width="1.5"><circle cx="177.6" cy="129" r="2"/><circle cx="187.6" cy="129" r="2"/><circle cx="182.6" cy="141" r="2"/><path d="M177.6 131 V134 Q177.6 136 182.6 136 Q187.6 136 187.6 134 V131 M182.6 136 V139"/></g><text x="197.6" y="142" font-size="14" fill="#7fa398">0</text><g clip-path="url(#c)"><polygon class="cshine" points="-84,4 6,4 -34,164 -124,164" fill="url(#cs)" style="animation-delay:0ms"/></g></g></svg>
