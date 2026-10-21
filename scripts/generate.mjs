@@ -74,9 +74,13 @@ function rng(seed) {
 const baseCss = `
 text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
 .serif{font-family:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",serif}
-.b{transform-box:fill-box;transform-origin:50% 100%;animation:rise 1s cubic-bezier(.2,.8,.2,1) backwards}
+.bd{transform-box:fill-box;transform-origin:50% 100%;animation:rise 1s cubic-bezier(.2,.8,.2,1) backwards}
 @keyframes rise{from{transform:scaleY(0)}}
-@media (prefers-reduced-motion:reduce){.b{animation:none}}
+.beacon{opacity:0;animation:beacon 3.4s ease-in-out infinite}
+@keyframes beacon{0%,100%{opacity:0}50%{opacity:.5}}
+.tw{animation:tw 4.5s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.12}50%{opacity:.6}}
+@media (prefers-reduced-motion:reduce){.bd,.beacon,.tw{animation:none}}
 `;
 
 const shell = (w, h, title, defs, body) =>
@@ -100,7 +104,13 @@ async function gql(query, variables) {
     body: JSON.stringify({ query, variables }),
   });
   const json = await res.json();
-  if (json.errors) throw new Error(JSON.stringify(json.errors));
+  if (json.errors) {
+    const msg = JSON.stringify(json.errors);
+    const hint = /forbidden|not accessible|resource/i.test(msg)
+      ? "\nHint: add a PROFILE_TOKEN repo secret (a personal access token with public_repo + read:user)."
+      : "";
+    throw new Error(msg + hint);
+  }
   return json.data.user;
 }
 
@@ -239,62 +249,107 @@ function renderHero(user, avatar) {
   return shell(W, H, `${CONFIG.displayName} — ${CONFIG.tagline}`, defs, body);
 }
 
-function renderSkyline(cal) {
-  const W = 1200, H = 330;
-  const weeks = cal.weeks;
-  const days = weeks.flatMap((w) => w.contributionDays);
-  const left = 40, plotW = 1120, base = 288, maxH = 180;
-  const step = plotW / days.length;
-  const bw = Math.max(step - 1, 1.6);
-  const max = Math.max(1, ...days.map((d) => d.contributionCount));
+function mix(a, b, t) {
+  const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const [x, y] = [p(a), p(b)];
+  return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join("");
+}
+const shade = (hex, k) => mix("#000000", hex, k);
 
+// Isometric city: one block per day. Weeks run down-right, weekdays run down-left.
+function renderSkyline(cal) {
+  const W = 1200, H = 550;
+  const a = 18, b = 6.5, maxH = 105, s = 0.72;
+  const ox = 600 - 23 * a, oy = maxH + 30;
+
+  const days = [];
+  cal.weeks.forEach((w, i) =>
+    w.contributionDays.forEach((d) =>
+      days.push({ i, j: new Date(d.date + "T00:00:00Z").getUTCDay(), n: d.contributionCount })
+    )
+  );
+  const max = Math.max(1, ...days.map((d) => d.n));
+  const pt = (x, y) => `${x.toFixed(1)},${y.toFixed(1)}`;
+  const center = (d) => [ox + (d.i - d.j) * a, oy + (d.i + d.j) * b + b];
+  const LOW = "#1f8a7c", HIGH = "#9bf7c0";
+
+  // Floor tiles
+  const floor = days
+    .map((d) => {
+      const [cx, cy] = center(d);
+      return `<polygon points="${pt(cx, cy - b)} ${pt(cx + a, cy)} ${pt(cx, cy + b)} ${pt(cx - a, cy)}"/>`;
+    })
+    .join("");
+
+  // Buildings, drawn back to front
+  const built = days
+    .filter((d) => d.n > 0)
+    .sort((p, q) => p.i + p.j - (q.i + q.j) || p.i - q.i);
+  const tall = new Set([...built].sort((p, q) => q.n - p.n).slice(0, 10));
+  let beaconIdx = 0;
+
+  const buildings = built
+    .map((d) => {
+      const t = d.n / max;
+      const h = 6 + Math.pow(t, 0.85) * (maxH - 6);
+      const top = mix(LOW, HIGH, Math.pow(t, 0.7));
+      const left = shade(top, 0.62), right = shade(top, 0.42);
+      const [cx, cy] = center(d);
+      const hw = a * s, hh = b * s;
+      const T = [cx, cy - hh], R = [cx + hw, cy], B = [cx, cy + hh], L = [cx - hw, cy];
+      const up = (p) => [p[0], p[1] - h];
+      const poly = (pts, fill) =>
+        `<polygon points="${pts.map((p) => pt(p[0], p[1])).join(" ")}" fill="${fill}" stroke="${fill}" stroke-width=".6" stroke-linejoin="round"/>`;
+      const delay = Math.round((d.i + d.j * 0.6) * 14);
+      const beacon = tall.has(d)
+        ? `<polygon class="beacon" points="${[up(T), up(R), up(B), up(L)].map((p) => pt(p[0], p[1])).join(" ")}" fill="#ffffff" style="animation-delay:${1800 + beaconIdx++ * 420}ms"/>`
+        : "";
+      return (
+        `<g class="bd" style="animation-delay:${delay}ms">` +
+        poly([L, B, up(B), up(L)], left) +
+        poly([B, R, up(R), up(B)], right) +
+        poly([up(T), up(R), up(B), up(L)], top) +
+        beacon +
+        `</g>`
+      );
+    })
+    .join("");
+
+  // Twinkling stars (kept clear of the text areas)
   const rand = rng(7);
   let stars = "";
-  for (let i = 0; i < 46; i++) {
+  for (let k = 0; k < 40; k++) {
     const x = 20 + rand() * (W - 40);
-    const y = 18 + rand() * 120;
-    if (x < 430 && y < 84) continue;
-    if (x > 1090 && y < 90) continue;
-    stars += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(0.7 + rand() * 0.8).toFixed(1)}" fill="${C.text}" fill-opacity="${(0.15 + rand() * 0.3).toFixed(2)}"/>`;
+    const y = 16 + rand() * 230;
+    if (x < 480 && y > H - 140) continue;
+    if (x > 880 && y < 76) continue;
+    stars += `<circle class="tw" cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(0.7 + rand() * 0.8).toFixed(1)}" fill="${C.text}" style="opacity:.35;animation-delay:${Math.round(rand() * 4000)}ms"/>`;
   }
 
-  let bars = "";
-  days.forEach((d, i) => {
-    const n = d.contributionCount;
-    const h = n === 0 ? 3 : 12 + (n / max) * (maxH - 12);
-    const x = left + i * step;
-    bars += `<rect class="b" x="${x.toFixed(2)}" y="${(base - h).toFixed(2)}" width="${bw.toFixed(2)}" height="${h.toFixed(2)}" rx="1" fill="${n === 0 ? C.dim : "url(#bld)"}" style="animation-delay:${Math.round(i * 3.5)}ms"/>`;
-  });
-
-  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  let labels = "";
-  let idx = 0;
-  let lastMonth = -1;
-  weeks.forEach((w) => {
-    const first = w.contributionDays[0];
-    const m = new Date(first.date + "T00:00:00Z").getUTCMonth();
-    if (m !== lastMonth && idx > 0) {
-      labels += `<text x="${(left + idx * step).toFixed(0)}" y="314" font-size="12" fill="${C.muted}">${MONTHS[m]}</text>`;
-    }
-    lastMonth = m;
-    idx += w.contributionDays.length;
-  });
+  // Legend (top right)
+  const sq = 1016;
+  const legend =
+    `<text x="${sq - 8}" y="49" text-anchor="end" font-size="13" fill="${C.muted}">Less</text>` +
+    [0, 0.25, 0.5, 0.75, 1]
+      .map((t, k) => `<rect x="${sq + k * 20}" y="38" width="14" height="14" rx="3" fill="${mix(LOW, HIGH, t)}"/>`)
+      .join("") +
+    `<text x="${sq + 106}" y="49" font-size="13" fill="${C.muted}">More</text>`;
 
   const defs =
     clip("card", W, H) +
-    `<linearGradient id="bld" gradientUnits="userSpaceOnUse" x1="0" y1="${base}" x2="0" y2="${base - maxH}"><stop offset="0" stop-color="#0f766e"/><stop offset="1" stop-color="${C.mint}"/></linearGradient>` +
-    `<radialGradient id="moon" cx="1124" cy="64" r="70" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.amber}" stop-opacity=".28"/><stop offset="1" stop-color="${C.amber}" stop-opacity="0"/></radialGradient>`;
+    `<radialGradient id="glow" cx="600" cy="300" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.teal}" stop-opacity=".12"/><stop offset="1" stop-color="${C.teal}" stop-opacity="0"/></radialGradient>` +
+    `<radialGradient id="moon" cx="64" cy="54" r="60" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${C.amber}" stop-opacity=".28"/><stop offset="1" stop-color="${C.amber}" stop-opacity="0"/></radialGradient>`;
 
   const body =
     panel(W, H) +
-    `<g clip-path="url(#card)">${stars}<circle cx="1124" cy="64" r="70" fill="url(#moon)"/><circle cx="1124" cy="64" r="15" fill="${C.amber}"/></g>` +
-    `<text x="40" y="52" font-size="24" class="serif" fill="${C.text}">${fmt(cal.totalContributions)} contributions in the past year</text>` +
-    `<text x="40" y="76" font-size="14" fill="${C.muted}">Each building is one day. Taller means more activity.</text>` +
-    bars +
-    `<rect x="${left}" y="${base}" width="${plotW}" height="1.5" fill="${C.edge}"/>` +
-    labels;
+    `<g clip-path="url(#card)"><rect width="${W}" height="${H}" fill="url(#glow)"/>${stars}<circle cx="64" cy="54" r="60" fill="url(#moon)"/><circle cx="64" cy="54" r="13" fill="${C.amber}"/></g>` +
+    `<g fill="${C.water}" stroke="${C.edge}" stroke-width="1">${floor}</g>` +
+    buildings +
+    legend +
+    `<text x="40" y="${H - 74}" font-size="26" class="serif" fill="${C.text}">${fmt(cal.totalContributions)} contributions in the past year</text>` +
+    `<text x="40" y="${H - 48}" font-size="14" fill="${C.muted}">Each building is one day. Taller means more activity.</text>`;
 
-  return shell(W, H, `${cal.totalContributions} contributions in the past year, drawn as a skyline`, defs, body);
+  return shell(W, H, `${cal.totalContributions} contributions in the past year, drawn as an isometric city`, defs, body);
 }
 
 function renderStats(user, cal) {
