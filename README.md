@@ -20,9 +20,8 @@ I am a frontend and full-stack engineer who enjoys building and exploring softwa
 
 ## Featured Projects
 
-<p align="center">
-  <img src="assets/projects.svg" alt="My pinned repositories" width="100%" />
-</p>
+<!--PROJECTS:START-->
+<!--PROJECTS:END-->
 
 ## Languages
 

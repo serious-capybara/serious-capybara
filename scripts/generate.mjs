@@ -89,7 +89,23 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,san
 @keyframes drift{to{transform:translate(-90px,30px)}}
 .pulse{transform-box:fill-box;transform-origin:center;animation:pulse 4.5s ease-out infinite}
 @keyframes pulse{0%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(1.4)}}
-@media (prefers-reduced-motion:reduce){.bd,.beacon,.tw,.wv,.dr,.pulse{animation:none}}
+.card{transform-box:fill-box;transform-origin:50% 50%;animation:lift 12s ease-in-out infinite}
+@keyframes lift{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.06)}}
+.hl{animation:glow 12s ease-in-out infinite}
+@keyframes glow{0%,19%,100%{opacity:0}5%,14%{opacity:1}}
+.grow{transform-box:fill-box;transform-origin:0% 50%;animation:growx .9s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes growx{from{transform:scaleX(0)}}
+.pop{transform-box:fill-box;transform-origin:50% 50%;animation:pop 12s ease-in-out infinite}
+@keyframes pop{0%,19%,100%{transform:scaleY(1)}5%,14%{transform:scaleY(1.9)}}
+.ld{transform-box:fill-box;transform-origin:50% 50%;animation:dotpop 12s ease-in-out infinite}
+@keyframes dotpop{0%,19%,100%{transform:scale(1)}5%,14%{transform:scale(1.5)}}
+.ln{animation:hlname 12s ease-in-out infinite}
+@keyframes hlname{0%,19%,100%{fill:#e8f5ee}5%,14%{fill:#86efac}}
+.lp{animation:hlpct 12s ease-in-out infinite}
+@keyframes hlpct{0%,19%,100%{fill:#7fa398}5%,14%{fill:#e8f5ee}}
+.shine{animation:sweep 6s ease-in-out 2s infinite}
+@keyframes sweep{0%{transform:translateX(0)}60%,100%{transform:translateX(1400px)}}
+@media (prefers-reduced-motion:reduce){.bd,.beacon,.tw,.wv,.dr,.pulse,.card,.hl,.grow,.pop,.ld,.ln,.lp,.shine{animation:none}}
 `;
 
 const shell = (w, h, title, defs, body) =>
@@ -410,68 +426,47 @@ function renderStats(user, cal) {
   return shell(W, H, "GitHub stats", "", body);
 }
 
-function renderProjects(repos) {
-  const cardW = 586, cardH = 160, gapX = 24, gapY = 20, x0 = 2, y0 = 2;
-  const W = 1200;
-  const rows = Math.max(1, Math.ceil(repos.length / 2));
-  const H = rows * cardH + (rows - 1) * gapY + 4;
+// One image per pinned repo, so each card can sit inside a real link in the README.
+function renderProjectCard(r, k) {
+  const cardW = 586, cardH = 160, padX = 24, padY = 12;
+  const W = cardW + padX * 2, H = cardH + padY * 2;
+  const x = padX, y = padY;
+  const lang = r.primaryLanguage;
+  const lc = lang?.color || C.muted;
+  const name = r.name.length > 36 ? r.name.slice(0, 35) + "…" : r.name;
+  const desc = r.description ? wrap(r.description, 62, 2) : [];
+  const delay = `animation-delay:${k * 2000}ms`;
 
-  if (!repos.length) {
-    return shell(W, 100, "Featured projects", "",
-      panel(W, 100) + `<text x="40" y="58" font-size="17" fill="${C.muted}">Pin up to six repositories on your profile and they will show up here.</text>`);
+  const descSvg = desc.length
+    ? desc.map((l, j) => `<text x="${x + 30}" y="${y + 78 + j * 22}" font-size="15" fill="${C.muted}">${esc(l)}</text>`).join("")
+    : `<text x="${x + 30}" y="${y + 78}" font-size="15" fill="${C.muted}" fill-opacity=".6">No description yet.</text>`;
+
+  const fy = y + 138;
+  let fx = x + 30;
+  let footer = "";
+  if (lang) {
+    footer += `<circle cx="${fx + 5}" cy="${fy - 5}" r="5" fill="${lc}"/><text x="${fx + 18}" y="${fy}" font-size="14" fill="${C.text}">${esc(lang.name)}</text>`;
+    fx += 18 + lang.name.length * 7.6 + 26;
   }
+  footer += `<polygon points="${starPoints(fx + 7, fy - 6, 7, 3)}" fill="${C.amber}"/><text x="${fx + 20}" y="${fy}" font-size="14" fill="${C.muted}">${fmt(r.stargazerCount)}</text>`;
+  fx += 20 + String(r.stargazerCount).length * 8 + 22;
+  footer +=
+    `<g fill="none" stroke="${C.muted}" stroke-width="1.5">` +
+    `<circle cx="${fx + 2}" cy="${fy - 13}" r="2"/><circle cx="${fx + 12}" cy="${fy - 13}" r="2"/><circle cx="${fx + 7}" cy="${fy - 1}" r="2"/>` +
+    `<path d="M${fx + 2} ${fy - 11} V${fy - 8} Q${fx + 2} ${fy - 6} ${fx + 7} ${fy - 6} Q${fx + 12} ${fy - 6} ${fx + 12} ${fy - 8} V${fy - 11} M${fx + 7} ${fy - 6} V${fy - 3}"/></g>` +
+    `<text x="${fx + 22}" y="${fy}" font-size="14" fill="${C.muted}">${fmt(r.forkCount)}</text>`;
 
-  const cards = repos
-    .map((r, i) => {
-      const x = x0 + (i % 2) * (cardW + gapX);
-      const y = y0 + Math.floor(i / 2) * (cardH + gapY);
-      const lang = r.primaryLanguage;
-      const lc = lang?.color || C.muted;
-      const name = r.name.length > 36 ? r.name.slice(0, 35) + "…" : r.name;
-      const desc = r.description ? wrap(r.description, 62, 2) : [];
-      const descSvg = desc.length
-        ? desc.map((l, j) => `<text x="${x + 30}" y="${y + 78 + j * 22}" font-size="15" fill="${C.muted}">${esc(l)}</text>`).join("")
-        : `<text x="${x + 30}" y="${y + 78}" font-size="15" fill="${C.muted}" fill-opacity=".6">No description yet.</text>`;
-
-      const fy = y + 138;
-      let fx = x + 30;
-      let footer = "";
-      if (lang) {
-        footer += `<circle cx="${fx + 5}" cy="${fy - 5}" r="5" fill="${lc}"/><text x="${fx + 18}" y="${fy}" font-size="14" fill="${C.text}">${esc(lang.name)}</text>`;
-        fx += 18 + lang.name.length * 7.6 + 26;
-      }
-      footer += `<polygon points="${starPoints(fx + 7, fy - 6, 7, 3)}" fill="${C.amber}"/><text x="${fx + 20}" y="${fy}" font-size="14" fill="${C.muted}">${fmt(r.stargazerCount)}</text>`;
-      fx += 20 + String(r.stargazerCount).length * 8 + 22;
-      footer +=
-        `<g fill="none" stroke="${C.muted}" stroke-width="1.5">` +
-        `<circle cx="${fx + 2}" cy="${fy - 13}" r="2"/><circle cx="${fx + 12}" cy="${fy - 13}" r="2"/><circle cx="${fx + 7}" cy="${fy - 1}" r="2"/>` +
-        `<path d="M${fx + 2} ${fy - 11} V${fy - 8} Q${fx + 2} ${fy - 6} ${fx + 7} ${fy - 6} Q${fx + 12} ${fy - 6} ${fx + 12} ${fy - 8} V${fy - 11} M${fx + 7} ${fy - 6} V${fy - 3}"/></g>` +
-        `<text x="${fx + 22}" y="${fy}" font-size="14" fill="${C.muted}">${fmt(r.forkCount)}</text>`;
-
-      return (
-        `<a href="${esc(r.url)}">` +
-        `<g clip-path="url(#c${i})">` +
-        `<rect x="${x}" y="${y}" width="${cardW}" height="${cardH}" fill="${C.water}"/>` +
-        `<rect x="${x}" y="${y}" width="5" height="${cardH}" fill="${lc}"/>` +
-        `</g>` +
-        `<rect x="${x + 0.75}" y="${y + 0.75}" width="${cardW - 1.5}" height="${cardH - 1.5}" rx="14" fill="none" stroke="${C.edge}" stroke-width="1.5"/>` +
-        `<text x="${x + 30}" y="${y + 46}" font-size="23" class="serif" fill="${C.text}">${esc(name)}</text>` +
-        descSvg +
-        footer +
-        `</a>`
-      );
-    })
-    .join("");
-
-  const defs = repos
-    .map((_, i) => {
-      const x = x0 + (i % 2) * (cardW + gapX);
-      const y = y0 + Math.floor(i / 2) * (cardH + gapY);
-      return `<clipPath id="c${i}"><rect x="${x}" y="${y}" width="${cardW}" height="${cardH}" rx="14"/></clipPath>`;
-    })
-    .join("");
-
-  return shell(W, H, "Featured projects", defs, cards);
+  const defs = `<clipPath id="c"><rect x="${x}" y="${y}" width="${cardW}" height="${cardH}" rx="14"/></clipPath>`;
+  const body =
+    `<g class="card" style="${delay}">` +
+    `<g clip-path="url(#c)"><rect x="${x}" y="${y}" width="${cardW}" height="${cardH}" fill="${C.water}"/><rect x="${x}" y="${y}" width="5" height="${cardH}" fill="${lc}"/></g>` +
+    `<rect x="${x + 0.75}" y="${y + 0.75}" width="${cardW - 1.5}" height="${cardH - 1.5}" rx="14" fill="none" stroke="${C.edge}" stroke-width="1.5"/>` +
+    `<rect class="hl" x="${x + 1}" y="${y + 1}" width="${cardW - 2}" height="${cardH - 2}" rx="14" fill="none" stroke="${C.mint}" stroke-width="2" style="opacity:0;${delay}"/>` +
+    `<text x="${x + 30}" y="${y + 46}" font-size="23" class="serif" fill="${C.text}">${esc(name)}</text>` +
+    descSvg +
+    footer +
+    `</g>`;
+  return shell(W, H, `${r.name}: ${r.description || "pinned repository"}`, defs, body);
 }
 
 function renderStack(user) {
@@ -488,13 +483,16 @@ function renderStack(user) {
   const top = all.slice(0, 6);
   const fallback = ["#86efac", "#5eead4", "#f2c879", "#7dd3fc", "#c4b5fd", "#fda4af"];
 
-  const left = 40, barW = 1120;
+  const left = 40, barW = 1120, barY = 96;
+  const turn = (i) => `animation-delay:${1800 + i * 2000}ms`;
   let x = left;
   let segs = "";
   top.forEach((l, i) => {
     l.color = l.color || fallback[i % fallback.length];
     const w = (l.size / sum) * barW;
-    segs += `<rect x="${x.toFixed(2)}" y="92" width="${Math.max(w - 3, 2).toFixed(2)}" height="16" rx="8" fill="${l.color}"/>`;
+    segs +=
+      `<g class="grow" style="animation-delay:${i * 130}ms">` +
+      `<rect class="pop" x="${x.toFixed(2)}" y="${barY}" width="${Math.max(w - 3, 2).toFixed(2)}" height="16" rx="8" fill="${l.color}" style="${turn(i)}"/></g>`;
     x += w;
   });
 
@@ -502,19 +500,52 @@ function renderStack(user) {
     .map((l, i) => {
       const col = i % 3, row = Math.floor(i / 3);
       const lx = left + col * 380;
-      const ly = 150 + row * 32;
+      const ly = 154 + row * 32;
       const pct = (l.size / sum) * 100;
-      return `<circle cx="${lx + 6}" cy="${ly - 5}" r="6" fill="${l.color}"/><text x="${lx + 22}" y="${ly}" font-size="16" fill="${C.text}">${esc(l.name)}</text><text x="${lx + 250}" y="${ly}" text-anchor="end" font-size="16" fill="${C.muted}">${pct < 1 ? "<1" : Math.round(pct)}%</text>`;
+      return (
+        `<circle class="ld" cx="${lx + 6}" cy="${ly - 5}" r="6" fill="${l.color}" style="${turn(i)}"/>` +
+        `<text class="ln" x="${lx + 22}" y="${ly}" font-size="16" fill="${C.text}" style="${turn(i)}">${esc(l.name)}</text>` +
+        `<text class="lp" x="${lx + 250}" y="${ly}" text-anchor="end" font-size="16" fill="${C.muted}" style="${turn(i)}">${pct < 1 ? "<1" : Math.round(pct)}%</text>`
+      );
     })
     .join("");
+
+  const defs =
+    `<clipPath id="barclip"><rect x="${left}" y="${barY}" width="${barW}" height="16" rx="8"/></clipPath>` +
+    `<linearGradient id="shine"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".4"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`;
 
   const body =
     panel(W, H) +
     `<text x="40" y="52" font-size="24" class="serif" fill="${C.text}">Languages I write most</text>` +
     `<text x="40" y="76" font-size="14" fill="${C.muted}">Share of code across my public repositories.</text>` +
     segs +
+    `<g clip-path="url(#barclip)"><rect class="shine" x="-160" y="${barY}" width="160" height="16" fill="url(#shine)"/></g>` +
     legend;
-  return shell(W, H, "Most used languages", "", body);
+  return shell(W, H, "Most used languages", defs, body);
+}
+
+// Rewrites the block between the PROJECTS markers in README.md so the right number of cards is linked.
+async function updateReadme(repos) {
+  let readme;
+  try {
+    readme = await fs.readFile("README.md", "utf8");
+  } catch {
+    console.warn("README.md not found, skipped README update.");
+    return;
+  }
+  const start = "<!--PROJECTS:START-->", end = "<!--PROJECTS:END-->";
+  const re = new RegExp(`${start}[\\s\\S]*?${end}`);
+  if (!re.test(readme)) {
+    console.warn("PROJECTS markers not found in README.md, skipped README update.");
+    return;
+  }
+  const block = repos.length
+    ? `<p align="center">\n${repos
+        .map((r, k) => `  <a href="${esc(r.url)}"><img src="assets/project-${k + 1}.svg" alt="${esc(r.name)}" width="49%" /></a>`)
+        .join("\n")}\n</p>`
+    : "_Pin up to six repositories on your GitHub profile and they will appear here._";
+  const next = readme.replace(re, () => `${start}\n${block}\n${end}`);
+  if (next !== readme) await fs.writeFile("README.md", next);
 }
 
 // ─── Main ───────────────────────────────────────────────────────────────────
@@ -523,16 +554,24 @@ async function main() {
   const user = MOCK ? mockUser() : await gql(QUERY, { login: LOGIN });
   const avatar = MOCK ? null : await avatarDataUri(user.avatarUrl);
   const cal = user.contributionsCollection.contributionCalendar;
+  const repos = user.pinnedItems.nodes;
 
   await fs.mkdir(OUT, { recursive: true });
   const files = {
     "hero.svg": renderHero(user, avatar),
     "contributions.svg": renderSkyline(cal),
     "stats.svg": renderStats(user, cal),
-    "projects.svg": renderProjects(user.pinnedItems.nodes),
     "stack.svg": renderStack(user),
   };
+  repos.forEach((r, k) => (files[`project-${k + 1}.svg`] = renderProjectCard(r, k)));
   for (const [name, svg] of Object.entries(files)) await fs.writeFile(`${OUT}/${name}`, svg);
+
+  // Remove cards from earlier runs that no longer exist (and the old single projects.svg)
+  for (const f of await fs.readdir(OUT)) {
+    if ((/^project-\d+\.svg$/.test(f) || f === "projects.svg") && !(f in files)) await fs.unlink(`${OUT}/${f}`);
+  }
+
+  await updateReadme(repos);
   console.log(`Wrote ${Object.keys(files).length} files to ${OUT}/`);
 }
 
