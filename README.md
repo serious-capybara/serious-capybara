@@ -23,6 +23,32 @@ I like turning ideas into clean, useful software and sharing the work in public.
 ## Featured Projects
 
 <!--FEATURED:START-->
+<table>
+  <tr>
+  <td width="50%" valign="top">
+    <a href="https://github.com/serious-capybara/g-link-app"><b>g-link-app</b></a><br/>
+    <sub>No description yet.</sub><br/>
+    <sub>● Kotlin &nbsp; ⭐ 0 &nbsp; 🍴 0</sub>
+  </td>
+  <td width="50%" valign="top">
+    <a href="https://github.com/serious-capybara/g-link-extension"><b>g-link-extension</b></a><br/>
+    <sub>No description yet.</sub><br/>
+    <sub>● JavaScript &nbsp; ⭐ 0 &nbsp; 🍴 0</sub>
+  </td>
+  </tr>
+  <tr>
+  <td width="50%" valign="top">
+    <a href="https://github.com/serious-capybara/managing-sentry"><b>managing-sentry</b></a><br/>
+    <sub>Managing Sentry: A dedicated Point of Sale and Inventory Management solution for Alekos Corner General Merchandise, digitizing daily operations and eliminating paper-based errors.</sub><br/>
+    <sub>● JavaScript &nbsp; ⭐ 0 &nbsp; 🍴 0</sub>
+  </td>
+  <td width="50%" valign="top">
+    <a href="https://github.com/serious-capybara/PHINMA-Education-Media-Directory"><b>PHINMA-Education-Media-Directory</b></a><br/>
+    <sub>PHINMAEducationMediaDirectory is a student-initiated web project that centralizes official websites, emails, and social media pages of PHINMA-affiliated schools. It organizes links through a clear academic hierarchy to make school information easier to find. The project is open, scalable, and designed for future contributions by individual schools.</sub><br/>
+    <sub>● HTML &nbsp; ⭐ 1 &nbsp; 🍴 0</sub>
+  </td>
+  </tr>
+</table>
 <!--FEATURED:END-->
 
 ## Highlights
